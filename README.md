@@ -3,9 +3,9 @@ Conversor de desenhos em AutoCAD para KML
 
 Segunda versão de meu aplicativo para criação de arquivos KML.
 
-* [ ] - Lisp para extração de informações
-* [ ] - Calcular Coordenadas de um Circulo
-* [ ] - Verificar pyeasykml (Modulo de 2017 que elaborei)
+* [ ] - Lisp para extração de informações - 75%
+* [x] - Calcular Coordenadas de um Circulo
+* [x] - Verificar pyeasykml (Modulo de 2017 que elaborei)
 * [ ] - Criar novas formas de extrair dados do AutoCAD
 
 Modulo | Instalação
