@@ -15,15 +15,15 @@
     
     (vla-StartUndoMark doc)
 
-    (defun *error*(msg)
-        (vla-EndUndoMark doc)
-        (princ msg)
-        (setvar "cmdecho" echo)
-        (if file
-            (close file)
-        )
-        (princ)
-    )
+;;;    (defun *error*(msg)
+;;;        (vla-EndUndoMark doc)
+;;;        (princ msg)
+;;;        (setvar "cmdecho" echo)
+;;;        (if file
+;;;            (close file)
+;;;        )
+;;;        (princ)
+;;;    )
 
     (setq
         ssPoly(ssget "x" '((0 . "lwpolyline")))
@@ -46,9 +46,16 @@
                     sp (trans (vlax-get sx 'StartPoint) 1 1)
                     ep (trans (vlax-get sx 'EndPoint) 1 1)
                     lay (vla-get-Layer sx)
+                    red(vlax-get (vlax-get sx 'TrueColor) 'Red)
+                    ;red(if (= (strlen (setq red(rtos red 2 0))) 1) (strcat "0" red) red)
+                    green(vlax-get (vlax-get sx 'TrueColor) 'Green)
+                    ;green(if (= (strlen (setq green(rtos green 2 0))) 1) (strcat "0" green) green)
+                    blue(vlax-get (vlax-get sx 'TrueColor) 'Blue)
+                    ;blue(if (= (strlen (setq blue(rtos blue 2 0))) 1) (strcat "0" blue) blue)
                     reg (1+ reg)
                     file (open (strcat dir "Line_" lay "_" (vl-string-translate "." "_" (rtos (getvar "cdate") 2 8)) "_" (rtos reg 2 0) ".csv") "w")
                 )
+		
                 (write-line "Este(x);Norte(y);Elev(z);Camada" file)
                 (write-line (strcat (rtos (car sp) 2 9) ";" (rtos (cadr sp) 2 9) ";" (rtos (caddr sp) 2 9) ";" lay ) file)
                 (write-line (strcat (rtos (car ep) 2 9) ";" (rtos (cadr ep) 2 9) ";" (rtos (caddr ep) 2 9) ";" lay ) file)
@@ -70,6 +77,9 @@
                         po (vlax-get sx 'Coordinates)
                         po (trans po 1 1)
                         lay (vla-get-Layer sx)
+                        red(vlax-get (vlax-get sx 'TrueColor) 'Red)
+                        green(vlax-get (vlax-get sx 'TrueColor) 'Green)
+                        blue(vlax-get (vlax-get sx 'TrueColor) 'Blue)
                     )
                     (write-line (strcat (rtos (car po) 2 9) ";" (rtos (cadr po) 2 9) ";" (rtos (caddr po) 2 9) ";" lay ) file)
                 )
@@ -86,6 +96,9 @@
                 (setq
                     sx (vlax-ename->vla-object (cadr x))
                     lay (vla-get-Layer sx)
+                    red(vlax-get (vlax-get sx 'TrueColor) 'Red)
+                    green(vlax-get (vlax-get sx 'TrueColor) 'Green)
+                    blue(vlax-get (vlax-get sx 'TrueColor) 'Blue)
                     elev (vlax-get sx 'Elevation)
                     count (/(length(vlax-safearray->list (vlax-variant-value (vlax-get-property sx 'Coordinates ))))2)
                     n 0
@@ -118,6 +131,9 @@
                 (setq
                     sx (vlax-ename->vla-object (cadr x))
                     lay (vla-get-Layer sx)
+                    red(vlax-get (vlax-get sx 'TrueColor) 'Red)
+                    green(vlax-get (vlax-get sx 'TrueColor) 'Green)
+                    blue(vlax-get (vlax-get sx 'TrueColor) 'Blue)
                     count (/(length(vlax-safearray->list (vlax-variant-value (vlax-get-property sx 'Coordinates ))))3)
                     n 0
                     reg (1+ reg)
@@ -153,6 +169,9 @@
                         po (trans po 1 1)
                         rad (vlax-get sx 'Radius)
                         lay (vla-get-Layer sx)
+                        red(vlax-get (vlax-get sx 'TrueColor) 'Red)
+                        green(vlax-get (vlax-get sx 'TrueColor) 'Green)
+                        blue(vlax-get (vlax-get sx 'TrueColor) 'Blue)
                     ); (vlax-dump-Object(vlax-ename->vla-object ( car (entsel)))t)
                     (write-line (strcat (rtos (car po) 2 9) ";" (rtos (cadr po) 2 9) ";" (rtos (caddr po) 2 9) ";" (rtos rad 2 9) ";" lay ) file)
                 )
