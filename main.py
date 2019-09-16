@@ -101,9 +101,9 @@ if __name__ == '__main__':
                     for item in coords:
                         target.write(KML.Ponto(Descricao=EntyType,Latitude=item[0],Longitude=item[1]))
                     pass
-                
-
+                pass
+            pass
+        pass
     
     with open(outFile, 'a+') as target:
         target.write(KML.FinalKML())
-
