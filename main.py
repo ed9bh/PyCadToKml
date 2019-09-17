@@ -3,8 +3,6 @@ from os import chdir, remove
 from glob import glob
 from numpy import sin, cos, deg2rad
 from csv import reader
-from utm import to_latlon
-chdir(r'A:\_Projetos\PyCadToKml')
 import pyeasykml as KML
 # %%
 # Funções
