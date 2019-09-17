@@ -3,9 +3,9 @@ from os import chdir, remove
 from glob import glob
 from numpy import sin, cos, deg2rad
 from csv import reader
+from utm import to_latlon
 chdir(r'A:\_Projetos\PyCadToKml')
 import pyeasykml as KML
-from utm import to_latlon
 # %%
 # Funções
 
@@ -44,13 +44,13 @@ if __name__ == '__main__':
 
             Raw = reader(csvFile)
             Content = []
-    
+
             for item in Raw:
                 Content.append(item)
                 pass
             del Content[0]
             coords = []
-    
+
             if EntyType == 'Circle':
                 for line in Content:
                     cont = line[0].split(';')
@@ -58,7 +58,8 @@ if __name__ == '__main__':
                     CircunferencePoints = coordenadasCirculo(x, y, rad)
                     pass
                 for item in CircunferencePoints:
-                    point = to_latlon(easting=item[0],northing=item[1], zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
+                    point = to_latlon(
+                        easting=item[0], northing=item[1], zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
                     pass
                 pass
@@ -66,7 +67,8 @@ if __name__ == '__main__':
                 for item in Content:
                     cont = item[0].split(';')
                     x, y = float(cont[0]), float(cont[1])
-                    point = to_latlon(easting=x,northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
+                    point = to_latlon(
+                        easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
                     pass
                 pass
@@ -74,7 +76,8 @@ if __name__ == '__main__':
                 for item in Content:
                     cont = item[0].split(';')
                     x, y = float(cont[0]), float(cont[1])
-                    point = to_latlon(easting=x,northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
+                    point = to_latlon(
+                        easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
                     pass
                 pass
@@ -82,28 +85,33 @@ if __name__ == '__main__':
                 for item in Content:
                     cont = item[0].split(';')
                     x, y = float(cont[0]), float(cont[1])
-                    point = to_latlon(easting=x,northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
+                    point = to_latlon(
+                        easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
                     pass
                 pass
-            
+
             with open(outFile, 'a+') as target:
                 if EntyType == 'LWPolyline':
-                    target.write(KML.Polilinha('teste', KML.corCadHex(2) , coords))
+                    target.write(KML.Polilinha(
+                        'teste', KML.corCadHex(2), coords))
                     pass
                 if EntyType == 'Circle':
-                    target.write(KML.Polilinha('teste', KML.corCadHex(3) , coords))
+                    target.write(KML.Polilinha(
+                        'teste', KML.corCadHex(3), coords))
                     pass
                 if EntyType == 'Line':
-                    target.write(KML.Polilinha('teste', KML.corCadHex(6) , coords))
+                    target.write(KML.Polilinha(
+                        'teste', KML.corCadHex(6), coords))
                     pass
                 if EntyType == 'Point':
                     for item in coords:
-                        target.write(KML.Ponto(Descricao=EntyType,Latitude=item[0],Longitude=item[1]))
+                        target.write(KML.Ponto(Descricao=EntyType,
+                                               Latitude=item[0], Longitude=item[1]))
                     pass
                 pass
             pass
         pass
-    
+
     with open(outFile, 'a+') as target:
         target.write(KML.FinalKML())
