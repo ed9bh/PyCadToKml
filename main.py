@@ -3,7 +3,9 @@ from os import chdir, remove
 from glob import glob
 from numpy import sin, cos, deg2rad
 from csv import reader
+from utm import to_latlon
 import pyeasykml as KML
+from pyeasykml import corRGB
 # %%
 # Funções
 
@@ -20,7 +22,7 @@ def coordenadasCirculo(CenterX=float, CenterY=float, Radious=float):
 
 
 # %%
-dirTestes = r'A:\_Projetos\DwgDeTestes\CSVExtraction_20190915'
+dirTestes = r'A:\_Projetos\DwgDeTestes\CSVExtraction_20190917'
 outFile = r'A:\_Projetos\DwgDeTestes\Out.kml'
 chdir(dirTestes)
 Entidades = glob('*.csv')
@@ -52,7 +54,9 @@ if __name__ == '__main__':
             if EntyType == 'Circle':
                 for line in Content:
                     cont = line[0].split(';')
-                    x, y, rad = float(cont[0]), float(cont[1]), float(cont[3])
+                    describe = cont[0]
+                    color = cont[1]
+                    x, y, rad = float(cont[2]), float(cont[3]), float(cont[4])
                     CircunferencePoints = coordenadasCirculo(x, y, rad)
                     pass
                 for item in CircunferencePoints:
@@ -64,7 +68,9 @@ if __name__ == '__main__':
             elif EntyType == 'LWPolyline':
                 for item in Content:
                     cont = item[0].split(';')
-                    x, y = float(cont[0]), float(cont[1])
+                    describe = cont[0]
+                    color = cont[1]
+                    x, y = float(cont[2]), float(cont[3])
                     point = to_latlon(
                         easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
@@ -73,7 +79,7 @@ if __name__ == '__main__':
             elif EntyType == 'Line':
                 for item in Content:
                     cont = item[0].split(';')
-                    x, y = float(cont[0]), float(cont[1])
+                    x, y = float(cont[2]), float(cont[3])
                     point = to_latlon(
                         easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
@@ -82,7 +88,9 @@ if __name__ == '__main__':
             elif EntyType == 'Point':
                 for item in Content:
                     cont = item[0].split(';')
-                    x, y = float(cont[0]), float(cont[1])
+                    describe = cont[0]
+                    color = cont[1]
+                    x, y = float(cont[2]), float(cont[3])
                     point = to_latlon(
                         easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
@@ -92,19 +100,19 @@ if __name__ == '__main__':
             with open(outFile, 'a+') as target:
                 if EntyType == 'LWPolyline':
                     target.write(KML.Polilinha(
-                        'teste', KML.corCadHex(2), coords))
+                        describe, corRGB(color), coords))
                     pass
                 if EntyType == 'Circle':
                     target.write(KML.Polilinha(
-                        'teste', KML.corCadHex(3), coords))
+                        describe, corRGB(color), coords))
                     pass
                 if EntyType == 'Line':
                     target.write(KML.Polilinha(
-                        'teste', KML.corCadHex(6), coords))
+                        describe, corRGB(color),  coords))
                     pass
                 if EntyType == 'Point':
                     for item in coords:
-                        target.write(KML.Ponto(Descricao=EntyType,
+                        target.write(KML.Ponto(describe,
                                                Latitude=item[0], Longitude=item[1]))
                     pass
                 pass
