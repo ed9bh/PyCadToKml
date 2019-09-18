@@ -83,7 +83,8 @@ def Hatch(Descricao=str, Cor=str, ListaLatitudeLongitude=[]):
     return hatch
 
 def corRGB(cor=str):
-  cor = cor.replace('_', ',')
+  #cor = cor.replace('_', ',')
+  red, green, blue = cor.split('_')
   return f'rgb({cor})'
 
 def corCadHex(cor):
