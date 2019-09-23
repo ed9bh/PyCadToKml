@@ -5,7 +5,7 @@ from numpy import sin, cos, deg2rad
 from csv import reader
 from utm import to_latlon
 import pyeasykml as KML
-from pyeasykml import corRGB
+from pyeasykml import cor_RGB_TO_HEX, make_New_Style
 # %%
 # Funções
 
@@ -33,9 +33,12 @@ ZONE_LETTER = 'k'
 
 if __name__ == '__main__':
 
-    with open(outFile, 'w') as target:
+    with open(outFile, 'w', encoding='UTF-8') as target:
         target.write(KML.InicioKML())
         pass
+
+    styleNames = []
+    content = ''
 
     for ENT in Entidades:
 
@@ -98,26 +101,34 @@ if __name__ == '__main__':
                 pass
 
             with open(outFile, 'a+') as target:
+                StyleName = ENT
+                StyleName = StyleName.replace('.csv', '')
+                StyleName = StyleName.replace('_', '')
+                TrueColor_HEX = cor_RGB_TO_HEX(color)
+                Style = make_New_Style(StyleName, TrueColor_HEX)
+                
+                target.write(Style)
+
                 if EntyType == 'LWPolyline':
-                    target.write(KML.Polilinha(
-                        describe, corRGB(color), coords))
+                    content += KML.Polilinha(describe, coords, StyleName)
                     pass
                 if EntyType == 'Circle':
-                    target.write(KML.Polilinha(
-                        describe, corRGB(color), coords))
+                    content += KML.Polilinha(describe, coords, StyleName)
                     pass
                 if EntyType == 'Line':
-                    target.write(KML.Polilinha(
-                        describe, corRGB(color),  coords))
+                    content += KML.Polilinha(describe, coords, StyleName)
                     pass
                 if EntyType == 'Point':
                     for item in coords:
-                        target.write(KML.Ponto(describe,
-                                               Latitude=item[0], Longitude=item[1]))
+                        content += KML.Ponto(describe,
+                                             Latitude=item[0], Longitude=item[1])
                     pass
                 pass
             pass
         pass
 
-    with open(outFile, 'a+') as target:
+    with open(outFile, 'a+', encoding='UTF-8') as target:
+        target.write(content)
         target.write(KML.FinalKML())
+
+# %%

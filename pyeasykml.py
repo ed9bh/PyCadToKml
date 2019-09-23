@@ -14,7 +14,7 @@ def InicioKML():
             '<description>DWGtoKML foi elaborado por Eric Drumond em 2017/04. Programa gratuito. Quer sua marca aqui, outras opções de DATUM e mais personalização? Entre em contato e solicite um orçamento.</description>\n'
             '<address>"http://br.linkedin.com/in/ericdrumond"</address>\n'
             '<atom:link href="http://br.linkedin.com/in/ericdrumond"/>\n'
-            + Styles
+            #+ Styles
             )
 
 def FinalKML():
@@ -32,16 +32,16 @@ def Ponto(Descricao=str, Latitude=float, Longitude=float):#
              ).format(Descricao, Latitude, Longitude)
     return ponto
 
-def Polilinha(Descricao=str, Cor=str, ListaLatitudeLongitude=[]):
+def Polilinha(Descricao=str, ListaLatitudeLongitude=[], StyleName=str):
     polylinha = ('\n<Placemark>\n'
-                 '<name>{}</name>\n'
+                 '<name>{0}</name>\n'
                  '<description>DWGtoPDF - RS(ed9bh) - By:Eric Drumond(2017/04)</description>\n'
-                 '<styleUrl>{}</styleUrl>'
-                 '<LineString id="LAYER">\n'
+                 '<styleUrl>#{1}</styleUrl>\n'
+                 '<LineString>\n'
                  '<tessellate>1</tessellate>\n'
                  '<altitudeMode>clampToGround</altitudeMode>\n'
                  '<coordinates>'
-                 ).format(Descricao, Cor)
+                 ).format(Descricao, StyleName)
 
     for coord in ListaLatitudeLongitude:
         polylinha += ("\n{},{}".format(coord[0], coord[1]))
@@ -53,18 +53,18 @@ def Polilinha(Descricao=str, Cor=str, ListaLatitudeLongitude=[]):
     return polylinha
 
 
-def Hatch(Descricao=str, Cor=str, ListaLatitudeLongitude=[]):
+def Hatch(Descricao=str, ListaLatitudeLongitude=[], StyleName=str):
     hatch = ('\n<Placemark>\n'
-             '<name>{}</name>\n'
+             '<name>{0}</name>\n'
              '<description>DWGtoPDF - RS(ed9bh) - By:Eric Drumond(2017/04)</description>\n'
-             '<styleUrl>{}</styleUrl>\n'
+             '<styleUrl>#{1}</styleUrl>\n'
              '<Polygon id="LAYER">\n'
              '<extrude>1</extrude>\n'
              #'<tessellate>1</tessellate>\n'
              '<altitudeMode>clampToGround</altitudeMode>\n'
              '<outerBoundaryIs>\n'
              '<LinearRing>'
-             ).format(Descricao, Cor)
+             ).format(Descricao, StyleName)
 
     for coord in ListaLatitudeLongitude:
             hatch += ("\n{},{}".format(coord[0], coord[1]))
@@ -82,10 +82,11 @@ def Hatch(Descricao=str, Cor=str, ListaLatitudeLongitude=[]):
                     )
     return hatch
 
-def corRGB(cor=str):
-  #cor = cor.replace('_', ',')
+def cor_RGB_TO_HEX(cor=str):
   red, green, blue = cor.split('_')
-  return f'rgb({cor})'
+  red, green, blue = int(red), int(green), int(blue)
+  Color_Hex = '%02x%02x%02x' % (red, green, blue)
+  return Color_Hex
 
 def corCadHex(cor):
     if cor == 1:
@@ -271,6 +272,23 @@ Styles = (
 )
 
 
+def make_New_Style(Name, Hex_Color):
+  style = (
+    f'\n\n<Style id="{Name}">\n'
+    '\t<LineStyle>\n'
+    f'\t\t<color>{Hex_Color}</color>\n'
+    '\t\t<width>2</width>\n'
+    '\t</LineStyle>\n'
+    '\t<PolyStyle>\n'
+    f'\t\t<color>{Hex_Color}</color>\n'
+    '\t\t<width>2</width>\n'
+    '\t<colorMode>normal</colorMode>\n'
+    #'\t<fill>1</fill>\n'
+    #'\t<outline>1</outline>\n'
+    '\t</PolyStyle>\n'
+    '</Style>\n\n'
+  )
+  return style
 
 
 
