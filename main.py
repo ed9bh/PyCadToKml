@@ -6,6 +6,7 @@ from csv import reader
 from utm import to_latlon
 import pyeasykml as KML
 from pyeasykml import cor_RGB_TO_HEX, make_New_Style
+from zipfile import ZipFile
 # %%
 # Funções
 
@@ -45,6 +46,10 @@ if __name__ == '__main__':
         with open(ENT, 'r') as csvFile:
             EntyType = ENT.split('_')[0]
 
+            StyleName = ENT
+            StyleName = StyleName.replace('.csv', '')
+            StyleName = StyleName.replace('_', '')
+
             Raw = reader(csvFile)
             Content = []
 
@@ -55,17 +60,24 @@ if __name__ == '__main__':
             coords = []
 
             if EntyType == 'Circle':
+                print(EntyType)
                 for line in Content:
                     cont = line[0].split(';')
                     describe = cont[0]
                     color = cont[1]
-                    x, y, rad = float(cont[2]), float(cont[3]), float(cont[4])
+                    TrueColor_HEX = cor_RGB_TO_HEX(color)
+                    x, y, rad = float(cont[2]), float(cont[3]), float(cont[5])
                     CircunferencePoints = coordenadasCirculo(x, y, rad)
-                    pass
-                for item in CircunferencePoints:
-                    point = to_latlon(
-                        easting=item[0], northing=item[1], zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
-                    coords.append([point[1], point[0]])
+                    for item in CircunferencePoints:
+                        point = to_latlon(
+                            easting=item[0], northing=item[1], zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
+                        coords.append([point[1], point[0]])
+                        Style = make_New_Style(StyleName, TrueColor_HEX)
+                        pass
+                    Style = make_New_Style(StyleName, TrueColor_HEX)
+                    with open(outFile, 'a+') as target:
+                        target.write(Style)
+                    content += KML.Polilinha(describe, coords, StyleName)
                     pass
                 pass
             elif EntyType == 'LWPolyline':
@@ -78,15 +90,27 @@ if __name__ == '__main__':
                         easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
                     pass
+                TrueColor_HEX = cor_RGB_TO_HEX(color)
+                Style = make_New_Style(StyleName, TrueColor_HEX)
+                with open(outFile, 'a+') as target:
+                    target.write(Style)
+                content += KML.Polilinha(describe, coords, StyleName)
                 pass
             elif EntyType == 'Line':
                 for item in Content:
                     cont = item[0].split(';')
+                    describe = cont[0]
+                    color = cont[1]
                     x, y = float(cont[2]), float(cont[3])
                     point = to_latlon(
                         easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
                     pass
+                TrueColor_HEX = cor_RGB_TO_HEX(color)
+                Style = make_New_Style(StyleName, TrueColor_HEX)
+                with open(outFile, 'a+') as target:
+                    target.write(Style)
+                content += KML.Polilinha(describe, coords, StyleName)
                 pass
             elif EntyType == 'Point':
                 for item in Content:
@@ -98,30 +122,8 @@ if __name__ == '__main__':
                         easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                     coords.append([point[1], point[0]])
                     pass
-                pass
-
-            with open(outFile, 'a+') as target:
-                StyleName = ENT
-                StyleName = StyleName.replace('.csv', '')
-                StyleName = StyleName.replace('_', '')
-                TrueColor_HEX = cor_RGB_TO_HEX(color)
-                Style = make_New_Style(StyleName, TrueColor_HEX)
-                
-                target.write(Style)
-
-                if EntyType == 'LWPolyline':
-                    content += KML.Polilinha(describe, coords, StyleName)
-                    pass
-                if EntyType == 'Circle':
-                    content += KML.Polilinha(describe, coords, StyleName)
-                    pass
-                if EntyType == 'Line':
-                    content += KML.Polilinha(describe, coords, StyleName)
-                    pass
-                if EntyType == 'Point':
-                    for item in coords:
-                        content += KML.Ponto(describe,
-                                             Latitude=item[0], Longitude=item[1])
+                for item in coords:
+                    content += KML.Ponto(describe, Latitude=item[0], Longitude=item[1])
                     pass
                 pass
             pass
@@ -130,5 +132,11 @@ if __name__ == '__main__':
     with open(outFile, 'a+', encoding='UTF-8') as target:
         target.write(content)
         target.write(KML.FinalKML())
+        pass
+
+    KMZ_Name = outFile.replace('.kml', '.kmz')
+    with ZipFile(KMZ_Name, 'w') as target:
+        target.write(outFile)
+        pass
 
 # %%
