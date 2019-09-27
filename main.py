@@ -4,9 +4,10 @@ from glob import glob
 from numpy import sin, cos, deg2rad
 from csv import reader
 from utm import to_latlon
+from zipfile import ZipFile
+#chdir('./PyCadToKml')
 import pyeasykml as KML
 from pyeasykml import cor_RGB_TO_HEX, make_New_Style
-from zipfile import ZipFile
 # %%
 # Funções
 
@@ -23,10 +24,10 @@ def coordenadasCirculo(CenterX=float, CenterY=float, Radious=float):
 
 
 # %%
-dirTestes = r'A:\_Projetos\DwgDeTestes\CSVExtraction_20190917'
-outFile = r'A:\_Projetos\DwgDeTestes\Out.kml'
-chdir(dirTestes)
-Entidades = glob('*.csv')
+dirTestes = r'A:/_Projetos/DwgDeTestes/CSVExtraction_20190917'
+outFile = r'A:/_Projetos/DwgDeTestes/Out.kml'
+# chdir(dirTestes)
+Entidades = glob(dirTestes + '/' + '*.csv')
 ZONE_NUMBER = 22
 ZONE_LETTER = 'k'
 
@@ -43,7 +44,10 @@ if __name__ == '__main__':
 
     for ENT in Entidades:
 
+        #print(ENT)
+
         with open(ENT, 'r') as csvFile:
+            ENT = ENT.replace(dirTestes + '\\', '')
             EntyType = ENT.split('_')[0]
 
             StyleName = ENT
@@ -126,6 +130,7 @@ if __name__ == '__main__':
                                          Latitude=item[0], Longitude=item[1])
                     pass
                 pass
+            #print(TrueColor_HEX)
             pass
         pass
 
