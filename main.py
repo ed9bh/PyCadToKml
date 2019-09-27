@@ -60,7 +60,6 @@ if __name__ == '__main__':
             coords = []
 
             if EntyType == 'Circle':
-                print(EntyType)
                 for line in Content:
                     cont = line[0].split(';')
                     describe = cont[0]
@@ -72,8 +71,8 @@ if __name__ == '__main__':
                         point = to_latlon(
                             easting=item[0], northing=item[1], zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER)
                         coords.append([point[1], point[0]])
-                        Style = make_New_Style(StyleName, TrueColor_HEX)
                         pass
+                    TrueColor_HEX = cor_RGB_TO_HEX(color)
                     Style = make_New_Style(StyleName, TrueColor_HEX)
                     with open(outFile, 'a+') as target:
                         target.write(Style)
@@ -123,7 +122,8 @@ if __name__ == '__main__':
                     coords.append([point[1], point[0]])
                     pass
                 for item in coords:
-                    content += KML.Ponto(describe, Latitude=item[0], Longitude=item[1])
+                    content += KML.Ponto(describe,
+                                         Latitude=item[0], Longitude=item[1])
                     pass
                 pass
             pass

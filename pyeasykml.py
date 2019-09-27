@@ -85,7 +85,7 @@ def Hatch(Descricao=str, ListaLatitudeLongitude=[], StyleName=str):
 def cor_RGB_TO_HEX(cor=str):
   red, green, blue = cor.split('_')
   red, green, blue = int(red), int(green), int(blue)
-  Color_Hex = '%02x%02x%02x' % (red, green, blue)
+  Color_Hex = '#%02x%02x%02x%02x' % (red, green, blue, 0)
   return Color_Hex
 
 def corCadHex(cor):
