@@ -91,8 +91,6 @@ def cor_RGB_TO_HEX(cor=str):
     red, green, blue = cor.split('_')
     red, green, blue = int(red), int(green), int(blue)
     Color_Hex = '#%02x%02x%02x%02x' % (255, blue, green, red)
-    #Color_Hex = '#%02x%02x%02x%02x' % (255, red, green, blue)
-    #Color_Hex = '#%02x%02x%02x' % (red, green, blue)
     return Color_Hex
 
 

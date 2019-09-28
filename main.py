@@ -5,9 +5,9 @@ from numpy import sin, cos, deg2rad
 from csv import reader
 from utm import to_latlon
 from zipfile import ZipFile
-#chdir('./PyCadToKml')
+# chdir('./PyCadToKml')
 import pyeasykml as KML
-from pyeasykml import cor_RGB_TO_HEX, make_New_Style
+from pyeasykml import cor_RGB_TO_HEX, make_New_Style, Polilinha, Hatch, Ponto
 # %%
 # Funções
 
@@ -21,6 +21,33 @@ def coordenadasCirculo(CenterX=float, CenterY=float, Radious=float):
         calcY = (cos(azm) * Radious) + CenterY
         pointList.append([calcX, calcY])
     return pointList
+
+
+def PolylineMaker(EntidadeCompleta, NomeEstilo):
+    Conteudo = []
+    Coordenadas = []
+    for item in EntidadeCompleta:
+        Propriedades = item[0].split(';')
+        Descricao = Propriedades[0]
+        color = Propriedades[1]
+        x, y = float(Propriedades[2]), float(Propriedades[3])
+        point = to_latlon(
+            easting=x, northing=y, zone_number=ZONE_NUMBER, zone_letter=ZONE_LETTER
+            )
+        Coordenadas.append([point[1], point[0]])
+    TrueColor_HEX = cor_RGB_TO_HEX(color)
+    HTML_Style_KML = make_New_Style(NomeEstilo, TrueColor_HEX)
+    return Polilinha(Descricao, Coordenadas, NomeEstilo, HTML_Style_KML)
+
+def CircleMaker(EntidadeCompleta, NomeEstilo):
+    return 'A ser definido'
+
+def HatchMaker():
+    return 'A ser definido'
+
+
+def PointMaker():
+    return 'A ser definido'
 
 
 # %%
@@ -44,7 +71,7 @@ if __name__ == '__main__':
 
     for ENT in Entidades:
 
-        #print(ENT)
+        # print(ENT)
 
         with open(ENT, 'r') as csvFile:
             ENT = ENT.replace(dirTestes + '\\', '')
@@ -130,7 +157,7 @@ if __name__ == '__main__':
                                          Latitude=item[0], Longitude=item[1])
                     pass
                 pass
-            #print(TrueColor_HEX)
+            # print(TrueColor_HEX)
             pass
         pass
 
