@@ -26,3 +26,6 @@ _By Eric Drumond // Setembro de 2019_
     Keyhole Markup Language : Google Developers Guide
     Coordenadas por base de angulo e distancia : <https://www.youtube.com/watch?v=l2nxnom58kg>
     Algumas dicas : <https://docs.pipz.com>
+
+
+BTC Donation : 12b5LJqYK4EVYjVBtvxgWumRbyd5Quuq7x
